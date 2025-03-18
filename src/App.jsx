@@ -6,8 +6,11 @@ const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
   { name: "backward", keys: ["ArrowDown", "KeyS"] },
   { name: "left", keys: ["ArrowLeft", "KeyA"] },
-  { name: "right", keys: ["ArrowRight", "KeyD"] },
+  { name: "right", keys: ["ArrowRight"] },
   { name: "run", keys: ["Shift"] },
+  {name: 'sit', keys: ["Enter"]},
+  {name: 'talk', keys: ["KeyT"]},
+  {name: 'jump', keys: ["Space"]}
 ];
 
 function App() {

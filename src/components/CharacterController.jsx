@@ -34,7 +34,7 @@ export const CharacterController = () => {
     "Character Control",
     {
       WALK_SPEED: { value: 2.4, min: 0.1, max: 4, step: 0.1 },
-      RUN_SPEED: { value: 3.6, min: 0.2, max: 12, step: 0.1 },
+      RUN_SPEED: { value: 5.6, min: 0.2, max: 12, step: 0.1 },
       ROTATION_SPEED: {
         value: degToRad(1),
         min: degToRad(0.1),
@@ -58,6 +58,8 @@ export const CharacterController = () => {
   const cameraLookAt = useRef(new Vector3());
   const [, get] = useKeyboardControls();
   const isClicking = useRef(false);
+  const [canJump, setCanJump] = useState(true);
+
 
   useEffect(() => {
     // const onMouseDown = (e) => {
@@ -96,6 +98,7 @@ export const CharacterController = () => {
       }
 
       let speed = get().run ? RUN_SPEED : WALK_SPEED;
+  
 
       if (isClicking.current) {
         console.log("clicking", mouse.x, mouse.y);
@@ -115,6 +118,21 @@ export const CharacterController = () => {
         movement.x = -1;
       }
 
+      if (get().jump) {
+        setAnimation("jump");
+        setTimeout(() => {
+          setAnimation("idle"); 
+        },2000); 
+        
+      }
+      
+      if (get().sit) {
+        setAnimation("sit");
+        setTimeout(() => {
+          setAnimation("sit_idle"); 
+        },2000); 
+      }
+
       if (movement.x !== 0) {
         rotationTarget.current += ROTATION_SPEED * movement.x;
       }
@@ -127,13 +145,21 @@ export const CharacterController = () => {
         vel.z =
           Math.cos(rotationTarget.current + characterRotationTarget.current) *
           speed;
-        if (speed === RUN_SPEED) {
-          setAnimation("run");
-        } else {
-          setAnimation("walk");
-        }
+          if (animation !== "jump" && animation !== "sit") {
+            if (speed === RUN_SPEED) {
+              setAnimation("run");
+            } else {
+              setAnimation("walk");
+            } 
+          }
       } else {
-        setAnimation("idle");
+          if(animation == 'jump'){
+            console.log('we are jumping');
+          }
+          if(animation == 'walk'){
+           setAnimation("idle");
+          }
+        
       }
       character.current.rotation.y = lerpAngle(
         character.current.rotation.y,
@@ -151,6 +177,7 @@ export const CharacterController = () => {
       0.1
     );
 
+   
     cameraPosition.current.getWorldPosition(cameraWorldPosition.current);
     camera.position.lerp(cameraWorldPosition.current, 0.1);
 
@@ -162,6 +189,9 @@ export const CharacterController = () => {
     }
   });
 
+
+
+
   return (
     <RigidBody colliders={false} lockRotations ref={rb} >
       <group ref={container}>
@@ -172,7 +202,7 @@ export const CharacterController = () => {
           <Customer_Model scale={1.9} animation={animation} />
         </group>
       </group>
-      <CapsuleCollider args={[0.08, 0.05]} />
+      <CapsuleCollider args={[0.02, 0.1]} />
     </RigidBody>
   );
 };

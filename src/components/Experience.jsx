@@ -8,12 +8,15 @@ import { SpotLight } from "@react-three/drei";
 import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Stats, OrbitControls } from '@react-three/drei'
+import { Bar_Menu } from './Bar_Menu';
+import { useFrame } from "@react-three/fiber";
+
 
 
 const maps = {
   bar: {
     scale: 0.02,
-    position: [10, -1, -20.5],
+    position: [10, -1.5, -20.5],
   },
 };
 
@@ -21,7 +24,8 @@ export const Experience = () => {
   const shadowCameraRef = useRef();
   const pointRef = useRef();
   const ambientRef = useRef();
-  const spotRef = useRef()
+  const spotRef = useRef();
+  
 
   const { map } = useControls("Map", {
     map: {
@@ -52,7 +56,7 @@ export const Experience = () => {
       },
     },
     intensity:{
-      value: 6,
+      value: 1,
       onChange: (v) => {
         pointRef.current.intensity = v
       },
@@ -102,9 +106,13 @@ export const Experience = () => {
     }
   })
 
+
+
+
+
   return (
     <>
-      {/* <OrbitControls /> */}
+      <Bar_Menu />
       <Environment preset="sunset" />
       <pointLight ref={pointRef} />
       <ambientLight ref={ambientRef} />
